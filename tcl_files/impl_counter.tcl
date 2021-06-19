@@ -3,23 +3,48 @@
 #
 #STEP#0: define your customized top file and setting up the board
 #
-set design counter
-set cons counter_fpga_lab_constr.xdc
+
 set fp [open "tmp.txt" r]
-set board_name [read $fp]
+set content [read $fp]
+close $fp
+set lines [split $content \n]
+set file_name [lindex $lines 0]
+set clock_rate [lindex $lines 1]
+set board_name [lindex $lines 2]
+
+set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
+set var2 [format {%0.3f} [expr {$clock_rate/2.0}]]
+set constr [open "${file_name}_fpga_lab_constr.xdc" a]
+
+set a {[get_ports clk]}
+set b {[get_clocks clk]}
+set c {[get_ports reset]}
+set d {[get_ports anode_active[*]]}
+set e {[get_ports out[*]]}
+#writing to the constraints file ... 
+puts $constr "create_clock -period ${var1} -name clk -waveform {0.000 ${var2}} $a"
+puts $constr "set_input_delay -clock $b -min -add_delay 0.000 $c"
+puts $constr "set_input_delay -clock $b -max -add_delay 0.000 $c"
+puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $d"
+puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $d"
+puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $e"
+puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $e"
+set cons ./fpga_lab_requirements/${filename}_fpga_lab_constr.xdc
+
+
 #
 # STEP#1: define output directory area.
 #
-set outputDir FPGA_counter
+set outputDir FPGA_${file_name}
 file mkdir $outputDir
 
 #
 # STEP#2: setup design sources and constraints
 #
-read_verilog -v $design.v
-read_verilog ./fpga_lab_requirements/clk_gate.v
-read_verilog -sv ./fpga_lab_requirements/pseudo_rand.sv
-set_property include_dirs {./fpga_lab_requirements ./} [current_fileset]
+read_verilog -v $file_name.v
+read_verilog ./fpga_lab_requirements/includes/clk_gate.v
+read_verilog -sv ./fpga_lab_requirements/includes/pseudo_rand.sv
+set_property include_dirs {./fpga_lab_requirements/includes ./} [current_fileset]
 read_xdc $cons
 
 #
@@ -99,7 +124,7 @@ puts [lindex $theWords 4]
 #
 # STEP#6: generate a bitstream
 #
-write_bitstream -force $outputDir/$design.bit
+write_bitstream -force $outputDir/$file_name.bit
 
 #
 # STEP#7: connect to your board 
@@ -107,7 +132,7 @@ write_bitstream -force $outputDir/$design.bit
 open_hw
 connect_hw_server
 open_hw_target
-set_property PROGRAM.FILE {./$outputDir/$design.bit} [current_hw_device]
+set_property PROGRAM.FILE {./$outputDir/$file_name.bit} [current_hw_device]
 program_hw_device
 
 exit
