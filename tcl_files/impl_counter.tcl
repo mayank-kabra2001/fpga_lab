@@ -87,6 +87,8 @@ write_xdc -no_fixed_only -force $outputDir/fpga_impl.xdc
 #STEP#7: Printing Summary
 #
 set met_timing "Met Timing Constrains: true"
+set no_timing "Timing constraints given : true"
+set no_timing_search "There are no user specified timing constraints."
 set search "Timing constraints are not met."
 set timing_report [open $outputDir/route/reports/post_route_timing_summary.rpt]
  while {[gets $timing_report data] != -1} {
@@ -101,12 +103,23 @@ set timing_report [open $outputDir/route/reports/post_route_timing_summary.rpt]
 		puts "----------------EXITING -----------------"
 		exit 
 		#STEP 6 - write bitstream will not get performed  
-    } else {
-
+    } else if {[string match *[string toupper $no_timing_search]* [string toupper $data]] } {
+		set no_timing "Timing constraints given : false"
+		set fid [open Vivado/out/status.txt w]
+		puts $fid "false" 
+		close $fid
+		close $timing_report
+		puts $no_timing
+		puts "check your timing constraints and run the script again"
+		puts "----------------EXITING -----------------"
+		exit
+		#STEP 6 - write bitstream will not get performed 
+    } else { 
     }
  }
 close $timing_report
 puts $met_timing
+puts $no_timing
 
 set search_util "Slice LUTs"
 set util_report [open $outputDir/route/reports/post_route_util.rpt]
