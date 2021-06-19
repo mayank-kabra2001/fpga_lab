@@ -29,7 +29,7 @@ puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $d"
 puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $d"
 puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $e"
 puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $e"
-set cons ./fpga_lab_requirements/${filename}_fpga_lab_constr.xdc
+set cons ./fpga_lab_requirements/${file_name}_fpga_lab_constr.xdc
 
 
 #
