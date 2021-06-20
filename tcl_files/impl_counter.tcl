@@ -45,7 +45,7 @@ read_verilog -v $file_name.v
 read_verilog ./fpga_lab_requirements/includes/clk_gate.v
 read_verilog -sv ./fpga_lab_requirements/includes/pseudo_rand.sv
 set_property include_dirs {./fpga_lab_requirements/includes ./} [current_fileset]
-source -e -v $cons > cons.log
+read_xdc $cons > cons.log 
 
 #
 # STEP#3: run synthesis, report utilization and timing estimates, write checkpoint design
