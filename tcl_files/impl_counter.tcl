@@ -103,7 +103,7 @@ set timing_report [open $outputDir/route/reports/post_route_timing_summary.rpt]
 		puts "----------------EXITING -----------------"
 		exit 
 		#STEP 6 - write bitstream will not get performed  
-    } else if {[string match *[string toupper $no_timing_search]* [string toupper $data]] } {
+    } elseif {[string match *[string toupper $no_timing_search]* [string toupper $data]] } {
 		set no_timing "Timing constraints given : false"
 		set fid [open Vivado/out/status.txt w]
 		puts $fid "false" 
@@ -114,8 +114,7 @@ set timing_report [open $outputDir/route/reports/post_route_timing_summary.rpt]
 		puts "----------------EXITING -----------------"
 		exit
 		#STEP 6 - write bitstream will not get performed 
-    } else { 
-    }
+    } else {}
  }
 close $timing_report
 puts $met_timing
