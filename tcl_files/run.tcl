@@ -15,7 +15,7 @@ set board_name [lindex $lines 3]
 
 
 
-if {[$mode == "1"]} {
+if { $mode == "1" } {
 	set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
 	set var2 [format {%0.3f} [expr {$clock_rate/2.0}]]
 	set constr [open "./fpga_lab_requirements/${file_name}_fpga_lab_constr.xdc" a]
