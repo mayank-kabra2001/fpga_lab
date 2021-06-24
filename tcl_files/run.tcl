@@ -208,7 +208,7 @@ set file_loc ./$outputDir/$file_name.bit
 puts $file_loc
 set test [exec pwd]
 puts $test
-set_property PROGRAM.FILE {./FPGA_counter/counter.bit} [lindex [get_hw_devices] 0]
+set_property PROGRAM.FILE $file_loc [lindex [get_hw_devices] 0]
 program_hw_device
 
 exit
