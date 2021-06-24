@@ -205,7 +205,7 @@ open_hw_target
 current_hw_device [lindex [get_hw_devices] 0]
 set file_loc ./$outputDir/$file_name.bit
 puts $file_loc
-set_property PROGRAM.FILE {$file_loc} [current_hw_device]
+set_property PROGRAM.FILE {$file_loc} [lindex [get_hw_devices] 0]
 program_hw_device
 
 exit
