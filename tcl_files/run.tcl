@@ -199,10 +199,10 @@ write_bitstream -force $outputDir/$file_name.bit
 #
 # STEP#7: connect to your board 
 #
-open_hw
+open_hw_manager
 connect_hw_server
 open_hw_target
-set_property PROGRAM.FILE {./$outputDir/$file_name.bit} [current_hw_device]
+set_property PROGRAM.FILE {$outputDir/$file_name.bit} [current_hw_device]
 program_hw_device
 
 exit
