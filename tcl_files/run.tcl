@@ -203,6 +203,7 @@ open_hw_manager
 connect_hw_server
 open_hw_target
 set file_loc ./$outputDir/$file_name.bit
+puts $file_loc
 set_property PROGRAM.FILE {$file_loc} [current_hw_device]
 program_hw_device
 
