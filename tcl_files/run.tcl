@@ -203,8 +203,10 @@ open_hw_manager
 connect_hw_server
 open_hw_target
 current_hw_device [lindex [get_hw_devices] 0]
+pwd
 set file_loc ./$outputDir/$file_name.bit
 puts $file_loc
+pwd
 set_property PROGRAM.FILE {$file_loc} [lindex [get_hw_devices] 0]
 program_hw_device
 
