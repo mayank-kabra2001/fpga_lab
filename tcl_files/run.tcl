@@ -12,13 +12,14 @@ set mode [lindex $lines 0]
 set file_name [lindex $lines 1]
 set clock_rate [lindex $lines 2]
 set board_name [lindex $lines 3]
+set board [lindex $lines 4]
 
 
 
 if { $mode == "1" } {
 	set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
 	set var2 [format {%0.3f} [expr {$clock_rate/2.0}]]
-	set constr [open "./fpga_lab_requirements/${file_name}_fpga_lab_constr.xdc" a]
+	set constr [open "./fpga_lab_requirements/${file_name}_fpga_lab_constr_${board}.xdc" a]
 
 	set a {[get_ports clk]}
 	set b {[get_clocks clk]}
@@ -34,13 +35,13 @@ if { $mode == "1" } {
 	puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $e"
 	puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $e"
 	close $constr
-	set cons ./fpga_lab_requirements/${file_name}_fpga_lab_constr.xdc
+	set cons ./fpga_lab_requirements/${file_name}_fpga_lab_constr_${board}.xdc
 
 } else {
 	set io_standard [lindex $lines 4]
 	set myfile [open "${file_name}.v" r]
 	set search_IO "assign PIPE_Constr_pin"
-	set constr [open "./fpga_lab_requirements/my_${file_name}_constraints.xdc" w]
+	set constr [open "./fpga_lab_requirements/my_${file_name}_constraints_${board}.xdc" w]
 	while {[gets $myfile data] != -1} {
 	    if {[string match *[string toupper $search_IO]* [string toupper $data]] } {
 	    	#puts $data
@@ -80,7 +81,7 @@ if { $mode == "1" } {
 	puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $e"
 	puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $e"
 	close $constr
-	set cons ./fpga_lab_requirements/my_${file_name}_constraints.xdc
+	set cons ./fpga_lab_requirements/my_${file_name}_constraints_${board}.xdc
 
 }
 
