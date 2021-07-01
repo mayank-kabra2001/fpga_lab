@@ -203,13 +203,13 @@ write_bitstream -force $outputDir/$file_name.bit
 open_hw
 connect_hw_server
 open_hw_target
-current_hw_device [lindex [get_hw_devices] 0]
+#current_hw_device [lindex [get_hw_devices] 0]
 
 set file_loc ./$outputDir/$file_name.bit
 puts $file_loc
 set test [exec pwd]
 puts $test
-set_property PROGRAM.FILE $file_loc [lindex [get_hw_devices] 0]
+set_property PROGRAM.FILE $file_loc [current_hw_device]
 program_hw_device
 
 exit
