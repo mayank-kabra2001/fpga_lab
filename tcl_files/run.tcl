@@ -53,7 +53,7 @@ if { $mode == "1" } {
 			set s1 [lindex [split $p1 " "] 18]
 			set signal [lindex [split $s1 "_"] 2]
 			set s2 [lindex [split $s1 "_"] 3]
-			set index [string trim $s2 "a0"]
+			set index [string trim $s2 "a0;"]
 			set signal_value $signal$index
 			#puts $signal_value
 			
