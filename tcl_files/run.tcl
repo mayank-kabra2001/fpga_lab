@@ -200,7 +200,7 @@ write_bitstream -force $outputDir/$file_name.bit
 #
 # STEP#7: connect to your board 
 #
-open_hw_manager
+open_hw
 connect_hw_server
 open_hw_target
 current_hw_device [lindex [get_hw_devices] 0]
