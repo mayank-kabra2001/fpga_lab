@@ -38,7 +38,7 @@ if { $mode == "1" } {
 	set cons ./fpga_lab_requirements/${file_name}_fpga_lab_constr_${board}.xdc
 
 } else {
-	set io_standard [lindex $lines 4]
+	set io_standard [lindex $lines 5]
 	set myfile [open "${file_name}.v" r]
 	set search_IO "assign PIPE_Constr_pin"
 	set constr [open "./fpga_lab_requirements/my_${file_name}_constraints_${board}.xdc" w]
