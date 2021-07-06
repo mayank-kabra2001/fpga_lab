@@ -19,7 +19,7 @@ set board [lindex $lines 4]
 if { $mode == "n" } {
 	set constr [open "./fpga_lab_requirements/${file_name}_fpga_lab_constr_${board}.xdc" a]
 } else {
-	set constr [open "./fpga_lab_requirements/my_${file_name}_constraints_${board}.xdc" w]
+	set constr [open "./fpga_lab_requirements/my_${file_name}_fpga_lab_constr_${board}.xdc" w]
 }
 
 set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
