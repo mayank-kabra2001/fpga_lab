@@ -14,19 +14,19 @@ done < "$file"
 
 cd ..
 
-foldername=name[0]
+foldername=${name[0]}
 echo "================================================"
 echo "SELECT THE FOLDER : ${foldername} " 
 echo "================================================"
 
 cd ${foldername}
 
-filename=name[1]
+filename=${name[1]}
 echo "================================================"
 echo "WHICH FILE YOU WANT TO UPLOAD ON VIVADO : ${filename}"
 echo "================================================"
 
-board=name[2]
+board=${name[2]}
 echo "================================================"
 echo "WHICH BOARD YOU WANT TO USE (basys3, edge_artix-7, zedboard) : ${board}" 
 echo "================================================"
@@ -84,7 +84,7 @@ echo "-------------------------------------------------"
 read -p "INPUT THE CLOCK(in ns) AT WHICH YOU WANT TO RUN YOUR PROGRAM : " clock_rate
 echo "================================================="
 
-board_name=name[3]
+board_name=${name[3]}
 echo "INPUT THE BOARD NAME WHICH YOU ARE USING : ${board_name}" 
 
 echo $mod >> tmp.txt
