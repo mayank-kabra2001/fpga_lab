@@ -54,7 +54,7 @@ read_verilog -v ./out_${file_name}_${board}/${file_name}.v
 read_verilog ./out_${file_name}_${board}/includes/clk_gate.v
 read_verilog -sv ./out_${file_name}_${board}/includes/pseudo_rand.sv
 set_property include_dirs {./out_${file_name}_${board}/includes ./} [current_fileset]
-read_xdc $cons 
+read_xdc $cons
 set fp [open $cons]
 while {-1 != [gets $fp line]} {
     puts "The current line is '$line'."
