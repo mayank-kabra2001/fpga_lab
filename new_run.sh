@@ -3,7 +3,6 @@ echo "================================================"
 echo "WELCOME TO MAKERCHIP FPGA LAB"
 echo "================================================" 
 
-cd ..
 i=1
 
 file ="config.txt"
@@ -13,6 +12,7 @@ while read -r line; do
     i=$((i+1))
 done < "$file"
 
+cd ..
 
 foldername=name[0]
 echo "================================================"
