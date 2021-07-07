@@ -5,7 +5,7 @@ echo "================================================"
 
 i=1
 
-file ="config.txt"
+file="config.txt"
 while read -r line; do
     [[ "$line" =~ ^#.*$ ]] && continue
     name[${i}]="${line}"
