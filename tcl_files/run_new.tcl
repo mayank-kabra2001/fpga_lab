@@ -17,9 +17,9 @@ set board [lindex $lines 4]
 
 
 if { $mode == "n" } {
-	set constr [open "./${file_name}_fpga_lab_constr_${board}.xdc" a]
+	set constr [open "./out_${file_name}_${board}/${file_name}_fpga_lab_constr_${board}.xdc" a]
 } else {
-	set constr [open "./my_${file_name}_fpga_lab_constr_${board}.xdc" a]
+	set constr [open "./out_${file_name}_${board}/my_${file_name}_fpga_lab_constr_${board}.xdc" a]
 }
 
 set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
@@ -35,9 +35,9 @@ puts $constr "set_input_delay -clock $b -max -add_delay 0.000 $c"
 close $constr
 
 if { $mode == "n" } {
-	set cons ./${file_name}_fpga_lab_constr_${board}.xdc
+	set cons ./out_${file_name}_${board}/${file_name}_fpga_lab_constr_${board}.xdc
 } else {
-	set cons ./my_${file_name}_fpga_lab_constr_${board}.xdc
+	set cons ./out_${file_name}_${board}/my_${file_name}_fpga_lab_constr_${board}.xdc
 }
 
 
@@ -51,9 +51,9 @@ file mkdir $outputDir
 # STEP#2: setup design sources and constraints
 #
 read_verilog -v ./out_${file_name}_${board}/${file_name}.v
-read_verilog ./out_${file_name}_${board}/includes/clk_gate.v
+read_verilog -sv ./out_${file_name}_${board}/includes/clk_gate.sv
 read_verilog -sv ./out_${file_name}_${board}/includes/pseudo_rand.sv
-set_property include_dirs {./out_${file_name}_${board}/includes ./} [current_fileset]
+set_property include_dirs ./out_${file_name}_${board}/includes [current_fileset]
 read_xdc $cons
 set fp [open $cons]
 while {-1 != [gets $fp line]} {
