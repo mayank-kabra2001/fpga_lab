@@ -1,4 +1,0 @@
-#write the folder name where your .tlv file is 
-#write the filename which you want to run 
-#write the name of your board you are using  (e.g basys3, zedboard , edge_artix-7)
-#write the part name of your board which vendor has given(eg. xc7a35tcpg236-1 for basys3)
