@@ -18,12 +18,13 @@ m4+definitions(['
    @_stage
       \SV_plus
          // The program in an instruction memory.
-         logic [31:0] instrs [0:M4_NUM_INSTRS-1];
+         logic [31:0] [0:M4_NUM_INSTRS-1] instrs ;
          assign instrs = '{
             m4_instr0['']m4_forloop(['m4_instr_ind'], 1, M4_NUM_INSTRS, [', m4_echo(['m4_instr']m4_instr_ind)'])
          };
       /M4_IMEM_HIER
-         $instr[31:0] = *instrs\[#imem\];
+      instr[31(#imem) +: 32]; 
+         $instr[31:0] = *instrs\[32 * #imem +: 32\];
       ?$imem_rd_en
          $imem_rd_data[31:0] = /imem[$imem_rd_addr]$instr;
     
