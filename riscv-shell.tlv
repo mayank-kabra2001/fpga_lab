@@ -23,7 +23,7 @@ m4+definitions(['
             m4_instr0['']m4_forloop(['m4_instr_ind'], 1, M4_NUM_INSTRS, [', m4_echo(['m4_instr']m4_instr_ind)'])
          };
       /M4_IMEM_HIER
-         $instr[31:0] = *instrs\[32 * #imem + 31: 32 * #imem\];
+         $instr[31:0] = *instrs\[(32 * #imem) + 31: (32 * #imem)\];
       ?$imem_rd_en
          $imem_rd_data[31:0] = /imem[$imem_rd_addr]$instr;
     
