@@ -18,7 +18,7 @@ m4+definitions(['
    @_stage
       \SV_plus
          // The program in an instruction memory.
-         logic [0:M4_NUM_INSTRS-1]  [31:0] instrs ;
+         logic [M4_NUM_INSTRS-1:0]  [31:0] instrs ;
          assign instrs = '{
             m4_instr0['']m4_forloop(['m4_instr_ind'], 1, M4_NUM_INSTRS, [', m4_echo(['m4_instr']m4_instr_ind)'])
          };
