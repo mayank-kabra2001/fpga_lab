@@ -47,7 +47,7 @@ m4+definitions(['
 
 
 // A data memory in |cpu at the given stage. Reads and writes in the same stage, where reads are of the data written by the previous transaction.
-\TLV dmem(@_stage)
+\TLV dmem(@_stage, $_delay)
    // Data Memory
    @_stage
       /dmem[15:0]
