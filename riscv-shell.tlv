@@ -35,7 +35,7 @@ m4+definitions(['
    @_wr
       /xreg[31:0]
          $wr = |cpu$rf_wr_en && (|cpu$rf_wr_index != 5'b0) && (|cpu$rf_wr_index == #xreg);
-         $value[31:0] = ($_delay == 0) ? $RETAIN : |cpu$reset ?   #xreg           :
+         $value[31:0] =  |cpu$reset ?   #xreg   :($_delay == 0) ? $RETAIN :
                         $wr        ?   |cpu$rf_wr_data :
                                        $RETAIN;
    @_rd
@@ -52,7 +52,7 @@ m4+definitions(['
    @_stage
       /dmem[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
-         $value[31:0] = ($_delay == 0) ? $RETAIN : |cpu$reset ?   #dmem :
+         $value[31:0] =  |cpu$reset ?   #dmem : ($_delay == 0) ? $RETAIN :
                         $wr        ?   |cpu$dmem_wr_data :
                                        $RETAIN;
                                   
