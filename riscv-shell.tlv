@@ -30,19 +30,19 @@ m4+definitions(['
 
 // A 2-rd 1-wr register file in |cpu that reads and writes in the given stages. If read/write stages are equal, the read values reflect previous writes.
 // Reads earlier than writes will require bypass.
-\TLV rf(@_rd, @_wr)
+\TLV rf(@_rd, @_wr, $_delay)
    // Reg File
    @_wr
       /xreg[31:0]
          $wr = |cpu$rf_wr_en && (|cpu$rf_wr_index != 5'b0) && (|cpu$rf_wr_index == #xreg);
-         $value[31:0] = |cpu$reset ?   #xreg           :
+         $value[31:0] = ($_delay == 0) ? $RETAIN : |cpu$reset ?   #xreg           :
                         $wr        ?   |cpu$rf_wr_data :
                                        $RETAIN;
    @_rd
       ?$rf_rd_en1
-         $rf_rd_data1[31:0] = /xreg[$rf_rd_index1]>>m4_stage_eval(@_wr - @_rd + 1)$value;
+         $rf_rd_data1[31:0] = ($_delay == 0) ? $RETAIN : /xreg[$rf_rd_index1]>>m4_stage_eval(@_wr - @_rd + 1)$value;
       ?$rf_rd_en2
-         $rf_rd_data2[31:0] = /xreg[$rf_rd_index2]>>m4_stage_eval(@_wr - @_rd + 1)$value;
+         $rf_rd_data2[31:0] = ($_delay == 0) ? $RETAIN : /xreg[$rf_rd_index2]>>m4_stage_eval(@_wr - @_rd + 1)$value;
       `BOGUS_USE($rf_rd_data1 $rf_rd_data2) 
 
 
@@ -52,11 +52,11 @@ m4+definitions(['
    @_stage
       /dmem[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
-         $value[31:0] = |cpu$reset ?   #dmem :
+         $value[31:0] = ($_delay == 0) ? $RETAIN : |cpu$reset ?   #dmem :
                         $wr        ?   |cpu$dmem_wr_data :
                                        $RETAIN;
                                   
       ?$dmem_rd_en
-         $dmem_rd_data[31:0] = /dmem[$dmem_addr]>>1$value;
+         $dmem_rd_data[31:0] = ($_delay == 0) ? $RETAIN : /dmem[$dmem_addr]>>1$value;
       `BOGUS_USE($dmem_rd_data)
 
