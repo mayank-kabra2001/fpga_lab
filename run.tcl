@@ -8,108 +8,42 @@ set fp [open "tmp.txt" r]
 set content [read $fp]
 close $fp
 set lines [split $content \n]
-set mode [lindex $lines 0]
-set file_name [lindex $lines 1]
-set clock_rate [lindex $lines 2]
-set board_name [lindex $lines 3]
-set board [lindex $lines 4]
-
-
-
-if { $mode == "1" } {
-	set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
-	set var2 [format {%0.3f} [expr {$clock_rate/2.0}]]
-	set constr [open "./fpga_lab_requirements/${file_name}_fpga_lab_constr_${board}.xdc" a]
-
-	set a {[get_ports clk]}
-	set b {[get_clocks clk]}
-	set c {[get_ports reset]}
-	set d {[get_ports anode_active[*]]}
-	set e {[get_ports out[*]]}
-	#writing to the constraints file ... 
-	puts $constr "create_clock -period ${var1} -name clk -waveform {0.000 ${var2}} $a"
-	puts $constr "set_input_delay -clock $b -min -add_delay 0.000 $c"
-	puts $constr "set_input_delay -clock $b -max -add_delay 0.000 $c"
-	puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $d"
-	puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $d"
-	puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $e"
-	puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $e"
-	close $constr
-	set cons ./fpga_lab_requirements/${file_name}_fpga_lab_constr_${board}.xdc
-
-} else {
-	set io_standard [lindex $lines 5]
-	set myfile [open "${file_name}.v" r]
-	set search_IO "assign PIPE_Constr_pin"
-	set constr [open "./fpga_lab_requirements/my_${file_name}_constraints_${board}.xdc" w]
-	while {[gets $myfile data] != -1} {
-	    if {[string match *[string toupper $search_IO]* [string toupper $data]] } {
-	    	#puts $data
-			set p1 $data
-			set p2 [lindex [split $p1 " "] 16]
-			set pin [lindex [split $p2 "_"] 3]
-			#puts $pin
-
-			set s1 [lindex [split $p1 " "] 18]
-			set signal [lindex [split $s1 "_"] 2]
-			set s2 [lindex [split $s1 "_"] 3]
-			set index [string trim $s2 "a0;"]
-			set signal_value $signal$index
-			#puts $signal_value
-			
-			set x ""
-			append x {[get_ports } "{${signal_value}}]"
-			puts $constr "set_property PACKAGE_PIN ${pin} $x"
-			puts $constr "set_property IOSTANDARD ${io_standard} $x"
-	    }
-	}
-
-	set var1 [format {%0.3f} [expr {$clock_rate/1.0}]]
-	set var2 [format {%0.3f} [expr {$clock_rate/2.0}]]
-
-	set a {[get_ports clk]}
-	set b {[get_clocks clk]}
-	set c {[get_ports reset]}
-	set d {[get_ports anode_active[*]]}
-	set e {[get_ports out[*]]}
-	#writing to the constraints file ... 
-	puts $constr "create_clock -period ${var1} -name clk -waveform {0.000 ${var2}} $a"
-	puts $constr "set_input_delay -clock $b -min -add_delay 0.000 $c"
-	puts $constr "set_input_delay -clock $b -max -add_delay 0.000 $c"
-	puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $d"
-	puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $d"
-	puts $constr "set_output_delay -clock $b -min -add_delay 0.000 $e"
-	puts $constr "set_output_delay -clock $b -max -add_delay 0.000 $e"
-	close $constr
-	set cons ./fpga_lab_requirements/my_${file_name}_constraints_${board}.xdc
-
-}
-
-
+set file_name [lindex $lines 0]
+set part_name [lindex $lines 1]
+set cons_name [lindex $lines 2]
 
 #
 # STEP#1: define output directory area.
 #
-set outputDir FPGA_${file_name}
+set outputDir ./out_${file_name}_${part_name}/FPGA_${file_name}
 file mkdir $outputDir
 
 #
 # STEP#2: setup design sources and constraints
 #
-read_verilog -v ${file_name}.v
-read_verilog ./fpga_lab_requirements/includes/clk_gate.v
-read_verilog -sv ./fpga_lab_requirements/includes/pseudo_rand.sv
-set_property include_dirs {./fpga_lab_requirements/includes ./} [current_fileset]
-read_xdc $cons 
-set fp [open $cons]
+read_verilog -v ./out_${file_name}_${part_name}/${file_name}.v
+read_verilog -sv ./out_${file_name}_${part_name}/includes/clk_gate.sv
+read_verilog -sv ./out_${file_name}_${part_name}/includes/pseudo_rand.sv
+set_property include_dirs ./out_${file_name}_${part_name}/includes [current_fileset]
+read_xdc $cons_name
+read_xdc ./out_${file_name}_${part_name}/clock_constraints.xdc
+
+set fp [open $cons_name]
 while {-1 != [gets $fp line]} {
     puts "The current line is '$line'."
 }
+close $fp
+
+set fp [open ./out_${file_name}_${part_name}/clock_constraints.xdc]
+while {-1 != [gets $fp line]} {
+    puts "The current line is '$line'."
+}
+close $fp
 
 #
 # STEP#3: run synthesis, report utilization and timing estimates, write checkpoint design
 #
-synth_design -top counter -part $board_name -retiming
+synth_design -top counter -part $part_name -retiming
 file mkdir $outputDir/syn/reports
 write_checkpoint -force $outputDir/syn/post_synth
 report_timing_summary -file $outputDir/syn/reports/post_synth_timing_summary.rpt
@@ -213,5 +147,3 @@ set_property PROGRAM.FILE $file_loc [current_hw_device]
 program_hw_device
 
 exit
-
-

@@ -1,4 +1,0 @@
-out_counter 
-counter
-basys3
-xc7a35tcpg236-1
